@@ -1,40 +1,30 @@
+import Modelos.Empleado;
+import Modelos.Oficina;
+import Repositorios.EmpleadoRepo;
+import Repositorios.OficinaRepo;
+
 import java.sql.*;
+import java.util.List;
 
 public class Paso1 {
 
     public static void main(String[] args) throws SQLException {
 
-        // Definición de los parámetros de conexión a la BBDD
+        EmpleadoRepo repo = new EmpleadoRepo();
+        List<Empleado> listEmpleados = repo.listarEmpleados();
 
-        String url = "jdbc:postgresql://localhost:5432/jardineria";
-        String user = "jardinero";
-        String pass = "jardinero";
-
-        // Se crean los recursos necesarios para la consulta fuera del try-catch
-
-        try(
-                Connection con = DriverManager.getConnection(url, user, pass);
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery(
-                        "SELECT cl.nombre_cliente,em.nombre " +
-                        "FROM cliente cl " +
-                        "JOIN empleado em " +
-                        "ON cl.codigo_empleado_rep_ventas = em.codigo_empleado"
-                );
-        )
-        {
-            while(rs.next()){
-                System.out.println(
-                        rs.getString("nombre_cliente") + " "
-                        + rs.getString("nombre")
-                );
-            }
-
-        }catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+        System.out.println("--------------- Lista de empleados -----------------");
+        for (Empleado emp : listEmpleados) {
+            System.out.println(emp);
         }
 
 
+        OficinaRepo oficinaRepo = new OficinaRepo();
+        List<Oficina> listOficinas = oficinaRepo.listarOficinas();
 
+        System.out.println("--------------- Lista de oficinas ---------------");
+        for (Oficina oficina : listOficinas) {
+            System.out.println(oficina);
+        }
     }
 }
